@@ -2,9 +2,8 @@ from logging import NOTSET
 from flask import Flask
 import os
 from dotenv import load_dotenv
-from .user import user
-from .views import views
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_manager
 
 db=SQLAlchemy()
 load_dotenv()
@@ -24,10 +23,24 @@ def create_app():
     #setting database
     app.config["SQLALCHEMY_DATABASE_URI"]=f"sqlite:///{DB_NAME}"
     db.init_app(app)
+    
     from .models import Notes,Users
     create_database(app)
+    from .user import user
+    from .views import views
     
     #Register blueprint
     app.register_blueprint(user)
     app.register_blueprint(views)
+    
+    login_manager = LoginManager()
+    login_manager.login_view = "user.login"
+    login_manager.init_app(app)
+    
+      
+      
+    @login_manager.user_loader
+    def load_user(id):
+        return Users.query.get(int(id))
+    
     return app
