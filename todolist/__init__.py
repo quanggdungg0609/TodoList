@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_manager
+from datetime import timedelta
 
 db=SQLAlchemy()
 load_dotenv()
@@ -36,7 +37,7 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = "user.login"
     login_manager.init_app(app)
-    
+    app.permanent_session_lifetime=timedelta(minutes=1)
       
       
     @login_manager.user_loader

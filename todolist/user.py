@@ -21,7 +21,7 @@ def login():
                 login_user(user, remember=True)
                 session.permanent=True
                 flash("Logged in success!",category="succces")
-                return redirect(url_for("views.home"))
+                return redirect(url_for("views.todolist"))
             else:
                 flash("Wrong password, please check again",category="error")
         else:
